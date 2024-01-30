@@ -47,6 +47,9 @@ function createCards(colors) {
     card.className = color;
     gameBoard.appendChild(card);
     card.style.background = color;
+    card.addEventListener("click", event => {
+      console.log(card.className);
+    });
   }
 }
 
