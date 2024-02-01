@@ -6,4 +6,8 @@
   height: 100px;
   margin: 20px;
   display: inline-block;
+  transform-style: preserve-3d;
+}
+.flipped {
+  transform: rotateY(-180deg);
 }

@@ -45,28 +45,58 @@ function createCards(colors) {
     // missing code here ...
     const card = document.createElement("div");
     card.className = color;
+    const front = document.createElement("front");
+    const back = document.createElement("back");
+    front.textContent = "front";
+    back.textContent = "back";
+    card.appendChild(front);
+    card.appendChild(back);
+    card.addEventListener("click", handleCardClick);
     gameBoard.appendChild(card);
-    card.style.background = color;
-    card.addEventListener("click", event => {
-      console.log(card.className);
-    });
   }
 }
+
+//keeps track of flipped cards
+let flippedCards = [];
 
 /** Flip a card face-up. */
 
 function flipCard(card) {
   // ... you need to write this ...
+  card.style.background = card.className;
+  card.classList.add("flipped");
 }
 
 /** Flip a card face-down. */
 
 function unFlipCard(card) {
   // ... you need to write this ...
+  card.classList.remove("flipped");
+  card.style.background = "none";
 }
 
 /** Handle clicking on a card: this could be first-card or second-card. */
 
 function handleCardClick(evt) {
-  // ... you need to write this ...
+  const clickedCard = evt.target;
+  if(!clickedCard.classList.contains("flipped")) {
+    flipCard(clickedCard);
+    flippedCards.push(clickedCard);
+  }
+  if(flippedCards.length === 2) {
+    if(flippedCards[0].className === flippedCards[1].className) {
+      console.log("match");
+      flippedCards = [];
+    } else {
+      //this allows users to keep clicking but not make flippedCards more than len 2 during the timeout;
+      let temp1 = flippedCards[0];
+      let temp2 = flippedCards[1];
+      flippedCards = [];
+      setTimeout(() => {
+        unFlipCard(temp1);
+        unFlipCard(temp2);
+      }, 1000);
+
+    }
+  }
 }
