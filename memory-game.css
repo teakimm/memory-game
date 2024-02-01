@@ -6,8 +6,11 @@
   height: 100px;
   margin: 20px;
   display: inline-block;
-  transform-style: preserve-3d;
+  text-align: center;
+  position: relative;
+  background: salmon;
+  transition: transform 0.95s;
 }
 .flipped {
-  transform: rotateY(-180deg);
+  transform: rotateY(180deg);
 }

@@ -42,15 +42,8 @@ function createCards(colors) {
   const gameBoard = document.getElementById("game");
 
   for (let color of colors) {
-    // missing code here ...
     const card = document.createElement("div");
-    card.className = color;
-    const front = document.createElement("front");
-    const back = document.createElement("back");
-    front.textContent = "front";
-    back.textContent = "back";
-    card.appendChild(front);
-    card.appendChild(back);
+    card.classList.add(color);
     card.addEventListener("click", handleCardClick);
     gameBoard.appendChild(card);
   }
@@ -58,21 +51,24 @@ function createCards(colors) {
 
 //keeps track of flipped cards
 let flippedCards = [];
+//keeps track of score
+let clicks = 0;
+let score = document.createElement("div");
+score.textContent = "Score: " + clicks;
+document.body.appendChild(score);
 
 /** Flip a card face-up. */
 
 function flipCard(card) {
-  // ... you need to write this ...
-  card.style.background = card.className;
+  card.style.background = card.classList[0];
   card.classList.add("flipped");
 }
 
 /** Flip a card face-down. */
 
 function unFlipCard(card) {
-  // ... you need to write this ...
   card.classList.remove("flipped");
-  card.style.background = "none";
+  card.style.background = "salmon";
 }
 
 /** Handle clicking on a card: this could be first-card or second-card. */
@@ -82,6 +78,9 @@ function handleCardClick(evt) {
   if(!clickedCard.classList.contains("flipped")) {
     flipCard(clickedCard);
     flippedCards.push(clickedCard);
+    clicks++;
+    score.textContent = "Score: " + clicks;
+
   }
   if(flippedCards.length === 2) {
     if(flippedCards[0].className === flippedCards[1].className) {
@@ -96,7 +95,6 @@ function handleCardClick(evt) {
         unFlipCard(temp1);
         unFlipCard(temp2);
       }, 1000);
-
     }
   }
 }
