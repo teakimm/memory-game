@@ -4,14 +4,19 @@
   <meta charset="UTF-8"/>
   <title>Memory Game!</title>
   <link rel="stylesheet" href="memory-game.css"/>
+  <script defer src="memory-game.js"></script>
 </head>
 <body>
+  <div class="menu">
+    <h1>Hex Match</h1>
+    <div class="slider-container">
+      <input class="slider" type="range" min="5" max="20" value="5">
+      <p class="slider-label">5 Pairs to Match</p>
+      <p>(Refer to Hex codes if the generated colors are similar)</p>
+    </div>
+    <button class="start">New Game!</button>
+  </div>
 
-<h1>Memory Game!</h1>
-
-<div id="game"></div>
-
-<script src="memory-game.js"></script>
-
+  <div class="board"></div>
 </body>
 </html>

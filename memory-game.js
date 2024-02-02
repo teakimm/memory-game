@@ -3,14 +3,20 @@
 /** Memory game: find matching pairs of cards and flip both of them. */
 
 const FOUND_MATCH_WAIT_MSECS = 1000;
-const COLORS = [
-  "red", "blue", "green", "orange", "purple",
-  "red", "blue", "green", "orange", "purple",
-];
+let colors = []
+let colorList = [];
 
-const colors = shuffle(COLORS);
 
-createCards(colors);
+function generateColors() {
+  colors = [];
+  for(let i = 0; i < pairs; i++) {
+    //using # + Math.floor(Math.random()*16777215).toString(16) resulted in invalid colors generating from time to time;
+    let randomColor = '#'+(Math.random() * 0xFFFFFF << 0).toString(16).padStart(6, '0').toUpperCase();
+    colors.push(randomColor);
+    colors.push(randomColor);
+  }
+}
+
 
 
 /** Shuffle array items in-place and return shuffled array. */
@@ -39,11 +45,20 @@ function shuffle(items) {
  */
 
 function createCards(colors) {
-  const gameBoard = document.getElementById("game");
-
+  const gameBoard = document.querySelector(".board");
+  gameBoard.replaceChildren();
   for (let color of colors) {
     const card = document.createElement("div");
     card.classList.add(color);
+    card.classList.add("card")
+    const front = document.createElement("div");
+    const back = document.createElement("div");
+    front.classList.add("face");
+    front.classList.add("front");
+    back.classList.add("face");
+    back.classList.add("back");
+    card.appendChild(front);
+    card.appendChild(back);
     card.addEventListener("click", handleCardClick);
     gameBoard.appendChild(card);
   }
@@ -51,24 +66,26 @@ function createCards(colors) {
 
 //keeps track of flipped cards
 let flippedCards = [];
+
 //keeps track of score
 let clicks = 0;
 let score = document.createElement("div");
+const menu = document.querySelector(".menu");
 score.textContent = "Score: " + clicks;
-document.body.appendChild(score);
+menu.appendChild(score);
 
 /** Flip a card face-up. */
 
 function flipCard(card) {
-  card.style.background = card.classList[0];
   card.classList.add("flipped");
+  card.children[1].style.background = card.classList[0];
+  card.children[1].textContent = card.classList[0];
 }
 
 /** Flip a card face-down. */
 
 function unFlipCard(card) {
   card.classList.remove("flipped");
-  card.style.background = "salmon";
 }
 
 /** Handle clicking on a card: this could be first-card or second-card. */
@@ -94,7 +111,24 @@ function handleCardClick(evt) {
       setTimeout(() => {
         unFlipCard(temp1);
         unFlipCard(temp2);
-      }, 1000);
+      }, 1200);
     }
   }
 }
+
+
+let slider = document.querySelector(".slider");
+let pairs = 5;
+slider.addEventListener("input", evt => {
+  pairs = evt.target.value;
+  const sliderLabel = document.querySelector(".slider-label");
+  sliderLabel.textContent = pairs + " Pairs to Match";
+});
+let start = document.querySelector(".start");
+start.addEventListener("click", evt => {
+  clicks = 0;
+  score.textContent = "Score: " + clicks;
+  generateColors()
+  let shuffledColors = shuffle(colors);
+  createCards(shuffledColors);
+});
