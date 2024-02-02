@@ -10,7 +10,7 @@ let colorList = [];
 function generateColors() {
   colors = [];
   for(let i = 0; i < pairs; i++) {
-    //using # + Math.floor(Math.random()*16777215).toString(16) resulted in invalid colors generating from time to time;
+    //using # + Math.floor(Math.random()*16777215).toString(16) resulted in invalid colors generating quite often
     let randomColor = '#'+(Math.random() * 0xFFFFFF << 0).toString(16).padStart(6, '0').toUpperCase();
     colors.push(randomColor);
     colors.push(randomColor);
@@ -122,7 +122,17 @@ let pairs = 5;
 slider.addEventListener("input", evt => {
   pairs = evt.target.value;
   const sliderLabel = document.querySelector(".slider-label");
-  sliderLabel.textContent = pairs + " Pairs to Match";
+
+  if(pairs > 20) {
+    sliderLabel.textContent = pairs + " Pairs to Match (Good Luck)";
+  } else if(pairs > 10) {
+    sliderLabel.textContent = pairs + " Pairs to Match (More than 10 pairs may make the game unfun)";
+  } else if(pairs > 1) {
+    sliderLabel.textContent = pairs + " Pairs to Match";
+  } else {
+    sliderLabel.textContent = "Click the two cards to win"
+  }
+
 });
 let start = document.querySelector(".start");
 start.addEventListener("click", evt => {
