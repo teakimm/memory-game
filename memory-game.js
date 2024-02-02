@@ -67,6 +67,7 @@ let flippedCards = [];
 //keeps track of score
 let clicks = 0;
 const score = document.createElement("div");
+score.className = "score";
 const menu = document.querySelector(".menu");
 score.textContent = "Score: " + clicks;
 menu.appendChild(score);
@@ -142,7 +143,7 @@ function checkWin() {
 }
 
 let slider = document.querySelector(".slider");
-let pairs = 5;
+let pairs = 6;
 slider.addEventListener("input", evt => {
   pairs = evt.target.value;
   const sliderLabel = document.querySelector(".slider-label");
@@ -158,6 +159,10 @@ slider.addEventListener("input", evt => {
 });
 let start = document.querySelector(".start");
 start.addEventListener("click", evt => {
+  //the game would crash if user resets during flipping animation
+  if(lock) {
+    return
+  }
   flippedCards = [];
   clicks = 0;
   score.textContent = "Score: " + clicks;
@@ -196,3 +201,4 @@ wipe.addEventListener("click", evt => {
   localStorage.clear();
   generateLeaderboard();
 });
+generateLeaderboard();

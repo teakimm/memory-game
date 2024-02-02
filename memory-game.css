@@ -1,21 +1,40 @@
 /* you can add to or change this. */
 body {
+  margin: 0;
+  padding: 0;
   font-family: sans-serif;
   background: rgb(44, 44, 44);
   color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
 }
 .board {
-  display: inline-block;
+  display: grid;
+  max-width: 90vw;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr) );
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+}
+.menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.slider-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .card {
-  display: inline-block;
   width: 200px;
   height: 250px;
   margin: 20px;
   text-align: center;
   transition: transform 1s;
   transform-style: preserve-3d;
-  position: relative;
 }
 .face {
   border-radius: 15px;
@@ -40,13 +59,59 @@ body {
   -webkit-text-stroke-width: 1px;
   -webkit-text-stroke-color:black;
 }
+.slider {
+  appearance: none;
+  border-radius: 25px;
+  height: 5px;
+}
+.slider::-webkit-slider-thumb {
+  appearance: none;
+  background: salmon;
+  width: 20px;
+  height: 20px;
+  border-radius: 25px;
+}
 table {
   border-collapse: collapse;
   border: 2px solid white;
+  width: 100%;
+  table-layout: fixed;
 }
 tr {
   border: 1px solid white;
 }
 th {
   border: 1px solid white;
+}
+.leaderboard-container {
+  width: 15vw;
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+button {
+  border: none;
+  background: none;
+  border: 3px solid white;
+  border-radius: 10px;
+  color: white;
+  font-size: 15px;
+  padding: 10px;
+  margin: 10px;
+}
+button:hover {
+  background: black;
+  cursor: pointer;
+}
+button:active {
+  transform: translateY(2px);
+}
+.slider:hover {
+  cursor: grab;
+}
+.score {
+  font-size: 50px;
+  font-weight: bolder;
+  margin: 25px;
 }
