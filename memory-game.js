@@ -4,8 +4,6 @@
 
 const FOUND_MATCH_WAIT_MSECS = 1000;
 let colors = []
-let colorList = [];
-
 
 function generateColors() {
   colors = [];
@@ -43,10 +41,9 @@ function shuffle(items) {
  * - a class with the value of the color
  * - a click event listener for each card to handleCardClick
  */
-
+const board = document.querySelector(".board");
 function createCards(colors) {
-  const gameBoard = document.querySelector(".board");
-  gameBoard.replaceChildren();
+  board.replaceChildren();
   for (let color of colors) {
     const card = document.createElement("div");
     card.classList.add(color);
@@ -60,7 +57,7 @@ function createCards(colors) {
     card.appendChild(front);
     card.appendChild(back);
     card.addEventListener("click", handleCardClick);
-    gameBoard.appendChild(card);
+    board.appendChild(card);
   }
 }
 
@@ -69,10 +66,20 @@ let flippedCards = [];
 
 //keeps track of score
 let clicks = 0;
-let score = document.createElement("div");
+const score = document.createElement("div");
 const menu = document.querySelector(".menu");
 score.textContent = "Score: " + clicks;
 menu.appendChild(score);
+
+//create empty winner message
+const winnerMessage = document.createElement("div");
+menu.appendChild(winnerMessage);
+
+
+/* I made a boolean to lock out the user from spam-clicking. I tried using temp variables, but when the list of colors is too small,
+the user can brute-force a win by just clicking as fast as they can. I don't prefer the click lockout, but it's currently the only solution
+I could think of */
+let lock = false;
 
 /** Flip a card face-up. */
 
@@ -91,38 +98,54 @@ function unFlipCard(card) {
 /** Handle clicking on a card: this could be first-card or second-card. */
 
 function handleCardClick(evt) {
+  if(lock) {
+    return;
+  }
   const clickedCard = evt.target;
   if(!clickedCard.classList.contains("flipped")) {
     flipCard(clickedCard);
     flippedCards.push(clickedCard);
     clicks++;
     score.textContent = "Score: " + clicks;
-
   }
   if(flippedCards.length === 2) {
     if(flippedCards[0].className === flippedCards[1].className) {
-      console.log("match");
       flippedCards = [];
     } else {
-      //this allows users to keep clicking but not make flippedCards more than len 2 during the timeout;
-      let temp1 = flippedCards[0];
-      let temp2 = flippedCards[1];
-      flippedCards = [];
+      lock = true;
       setTimeout(() => {
-        unFlipCard(temp1);
-        unFlipCard(temp2);
-      }, 1200);
+        unFlipCard(flippedCards[0]);
+        unFlipCard(flippedCards[1]);
+        flippedCards = [];
+        lock = false;
+      }, 1000);
+
     }
+  }
+  if(checkWin()) {
+    winnerMessage.textContent = "You win with a score of " + clicks + '! 🎉🥳 (Click "New Game!" to play again)';
+    if(localStorage[pairs] === undefined || localStorage[pairs] > clicks) {
+      localStorage.setItem(pairs, clicks);
+    }
+    generateLeaderboard();
   }
 }
 
+function checkWin() {
+  let allFlipped = true;
+  for(const child of board.children) {
+    if(!child.classList.contains("flipped")) {
+      allFlipped = false;
+    }
+  }
+  return allFlipped;
+}
 
 let slider = document.querySelector(".slider");
 let pairs = 5;
 slider.addEventListener("input", evt => {
   pairs = evt.target.value;
   const sliderLabel = document.querySelector(".slider-label");
-
   if(pairs > 20) {
     sliderLabel.textContent = pairs + " Pairs to Match (Good Luck)";
   } else if(pairs > 10) {
@@ -132,13 +155,44 @@ slider.addEventListener("input", evt => {
   } else {
     sliderLabel.textContent = "Click the two cards to win"
   }
-
 });
 let start = document.querySelector(".start");
 start.addEventListener("click", evt => {
+  flippedCards = [];
   clicks = 0;
   score.textContent = "Score: " + clicks;
+  winnerMessage.textContent = "";
   generateColors()
   let shuffledColors = shuffle(colors);
   createCards(shuffledColors);
+});
+
+function generateLeaderboard() {
+  let sortedStorage = sortObj(localStorage);
+  const leaderboard = document.querySelector(".leaderboard");
+  leaderboard.replaceChildren();
+  for(const key in sortedStorage) {
+    let hiScore = document.createElement("tr");
+    let hiPair = document.createElement("th");
+    hiPair.textContent = key;
+    let hiClicks = document.createElement("th");
+    hiClicks.textContent = sortedStorage[key];
+    hiScore.appendChild(hiPair);
+    hiScore.appendChild(hiClicks);
+    leaderboard.appendChild(hiScore);
+  }
+}
+function sortObj(obj) {
+  const sortedKeys = Object.keys(obj).sort((a, b) => a - b);
+  const sortedObj = {};
+  for(const val of sortedKeys) {
+    sortedObj[val] = obj[val];
+  }
+  return sortedObj;
+}
+
+const wipe = document.querySelector(".wipe");
+wipe.addEventListener("click", evt => {
+  localStorage.clear();
+  generateLeaderboard();
 });

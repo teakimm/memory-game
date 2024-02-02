@@ -40,3 +40,13 @@ body {
   -webkit-text-stroke-width: 1px;
   -webkit-text-stroke-color:black;
 }
+table {
+  border-collapse: collapse;
+  border: 2px solid white;
+}
+tr {
+  border: 1px solid white;
+}
+th {
+  border: 1px solid white;
+}
