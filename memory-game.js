@@ -58,6 +58,7 @@ function createCards(colors) {
     card.appendChild(back);
     card.addEventListener("click", handleCardClick);
     board.appendChild(card);
+    card.style.animation = "cardAnimation 0.6s ease";
   }
 }
 

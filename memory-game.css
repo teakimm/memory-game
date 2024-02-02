@@ -115,3 +115,11 @@ button:active {
   font-weight: bolder;
   margin: 5px;
 }
+@keyframes cardAnimation {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
