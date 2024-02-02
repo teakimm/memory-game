@@ -144,7 +144,7 @@ function checkWin() {
 }
 
 let slider = document.querySelector(".slider");
-let pairs = 6;
+let pairs = 5;
 slider.addEventListener("input", evt => {
   pairs = evt.target.value;
   const sliderLabel = document.querySelector(".slider-label");
